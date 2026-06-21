@@ -13,26 +13,42 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <!-- Update banner (hidden until SW signals a new version) -->
+
+<!-- ════════ FREE VIEW ════════ -->
+<div id="view-free">
   <div class="update-banner" id="update-banner" hidden>
     Update available — <button class="btn-link" id="btn-reload">tap to reload</button>
   </div>
-
   <div class="app">
     <header class="app-header">
-      <h1>Repair or Replace?</h1>
-      <p class="tagline">Enter your numbers. Get a clear answer.</p>
+      <div class="app-header-row">
+        <div>
+          <h1>Repair or Replace?</h1>
+          <p class="tagline">Enter your numbers. Get a clear answer.</p>
+        </div>
+        <button class="btn-signin" id="btn-open-login">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          Sign in
+        </button>
+      </div>
     </header>
+
+    <div class="premium-strip">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+      Premium unlocks unlimited items, analytics &amp; more —
+      <button class="btn-link-gold" id="btn-upgrade-strip">Upgrade now</button>
+    </div>
 
     <nav class="tabs" role="tablist">
       <button class="tab tab--active" role="tab" aria-selected="true" data-tab="calculator">Calculator</button>
-      <button class="tab" role="tab" aria-selected="false" data-tab="tracker">My Items</button>
+      <button class="tab" role="tab" aria-selected="false" data-tab="tracker">
+        My Items <span class="tab-badge">Free · 3 max</span>
+      </button>
     </nav>
 
     <!-- CALCULATOR TAB -->
     <main class="tab-panel" id="panel-calculator">
       <form class="calc-form" id="calc-form" novalidate>
-
         <div class="field">
           <label for="category">Item type</label>
           <select id="category" name="category">
@@ -56,67 +72,48 @@
             <option value="other">Other (custom)</option>
           </select>
         </div>
-
         <div class="field field--lifespan">
-          <label for="lifespan">
-            Typical lifespan (years)
-            <span class="label-hint">— edit if you know better</span>
-          </label>
+          <label for="lifespan">Typical lifespan (years) <span class="label-hint">— edit if you know better</span></label>
           <input type="number" id="lifespan" name="lifespan" min="1" max="50" step="1">
         </div>
-
         <div class="field">
           <label for="age">Item age (years)</label>
           <input type="number" id="age" name="age" min="0" max="100" step="0.5" placeholder="e.g. 7">
         </div>
-
         <div class="field">
           <label for="repair-cost">Repair quote (£)</label>
           <input type="number" id="repair-cost" name="repair-cost" min="0" step="1" placeholder="e.g. 150">
         </div>
-
         <div class="field">
           <label for="replace-cost">Replacement cost (£)</label>
           <input type="number" id="replace-cost" name="replace-cost" min="0" step="1" placeholder="e.g. 400">
         </div>
-
         <button type="submit" class="btn-calculate">Calculate</button>
       </form>
 
-      <!-- RESULT -->
       <section class="result" id="result" aria-live="polite" hidden>
         <div class="verdict-block">
           <span class="verdict-label">Verdict</span>
           <div class="verdict" id="verdict"></div>
           <p class="verdict-reason" id="verdict-reason"></p>
         </div>
-
         <div class="stats">
-          <div class="stat">
-            <span class="stat-label">Repair ratio</span>
-            <span class="stat-value" id="stat-ratio"></span>
-          </div>
-          <div class="stat">
-            <span class="stat-label">Repair cost / year left</span>
-            <span class="stat-value" id="stat-repair-per-year"></span>
-          </div>
-          <div class="stat">
-            <span class="stat-label">Replace cost / year</span>
-            <span class="stat-value" id="stat-replace-per-year"></span>
-          </div>
-          <div class="stat">
-            <span class="stat-label">Estimated life remaining</span>
-            <span class="stat-value" id="stat-remaining"></span>
-          </div>
+          <div class="stat"><span class="stat-label">Repair ratio</span><span class="stat-value" id="stat-ratio"></span></div>
+          <div class="stat"><span class="stat-label">Repair cost / year left</span><span class="stat-value" id="stat-repair-per-year"></span></div>
+          <div class="stat"><span class="stat-label">Replace cost / year</span><span class="stat-value" id="stat-replace-per-year"></span></div>
+          <div class="stat"><span class="stat-label">Estimated life remaining</span><span class="stat-value" id="stat-remaining"></span></div>
         </div>
-
         <div class="result-actions" id="result-actions">
           <span class="saved-notice" id="saved-notice" hidden>
-            ✓ Saved to tracker as <strong id="saved-name"></strong> — <button class="btn-link" id="btn-rename-item">rename</button>
+            ✓ Saved as <strong id="saved-name"></strong> — <button class="btn-link" id="btn-rename-item">rename</button>
           </span>
         </div>
+        <div class="result-upsell">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+          <span>Track repair history, cost analytics &amp; unlimited items</span>
+          <button class="btn-link-gold" id="btn-upgrade-result">Go Premium →</button>
+        </div>
       </section>
-
       <div class="inline-message" id="calc-message" hidden></div>
     </main>
 
@@ -125,51 +122,33 @@
       <div class="tracker-actions">
         <button class="btn-primary" id="btn-add-item">+ Add item</button>
       </div>
-
       <div class="empty-state" id="tracker-empty">
         <p>No items yet.</p>
         <p>Add an item to track warranties and send it to the calculator when something breaks.</p>
       </div>
-
       <ul class="item-list" id="item-list" aria-label="Saved items"></ul>
-
-      <!-- ADD / EDIT ITEM FORM -->
+      <div class="free-limit-banner" id="free-limit-banner" hidden>
+        <div class="flb-inner">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+          <div>
+            <strong>You've reached the free limit (3 items)</strong>
+            <p>Upgrade to Premium for unlimited items, analytics, export &amp; more.</p>
+          </div>
+          <button class="btn-upgrade-cta" id="btn-upgrade-limit">Upgrade →</button>
+        </div>
+      </div>
+      <!-- Free add/edit modal -->
       <div class="modal-overlay" id="item-modal" hidden role="dialog" aria-modal="true" aria-labelledby="modal-title">
         <div class="modal">
           <h2 id="modal-title">Add item</h2>
           <form id="item-form" novalidate>
             <input type="hidden" id="item-id">
-
-            <div class="field">
-              <label for="item-name">Item name <span class="required">*</span></label>
-              <input type="text" id="item-name" placeholder="e.g. Kitchen washing machine" required>
-            </div>
-
-            <div class="field">
-              <label for="item-category">Category</label>
-              <select id="item-category"></select>
-            </div>
-
-            <div class="field">
-              <label for="item-purchase-date">Purchase date</label>
-              <input type="date" id="item-purchase-date">
-            </div>
-
-            <div class="field">
-              <label for="item-price">Purchase price (£)</label>
-              <input type="number" id="item-price" min="0" step="1" placeholder="e.g. 450">
-            </div>
-
-            <div class="field">
-              <label for="item-warranty">Warranty length (months)</label>
-              <input type="number" id="item-warranty" min="0" step="1" placeholder="e.g. 24">
-            </div>
-
-            <div class="field">
-              <label for="item-notes">Notes</label>
-              <textarea id="item-notes" rows="2" placeholder="Optional — serial number, model, etc."></textarea>
-            </div>
-
+            <div class="field"><label for="item-name">Item name <span class="required">*</span></label><input type="text" id="item-name" placeholder="e.g. Kitchen washing machine" required></div>
+            <div class="field"><label for="item-category">Category</label><select id="item-category"></select></div>
+            <div class="field"><label for="item-purchase-date">Purchase date</label><input type="date" id="item-purchase-date"></div>
+            <div class="field"><label for="item-price">Purchase price (£)</label><input type="number" id="item-price" min="0" step="1" placeholder="e.g. 450"></div>
+            <div class="field"><label for="item-warranty">Warranty length (months)</label><input type="number" id="item-warranty" min="0" step="1" placeholder="e.g. 24"></div>
+            <div class="field"><label for="item-notes">Notes</label><textarea id="item-notes" rows="2" placeholder="Optional — serial number, model, etc."></textarea></div>
             <div class="modal-actions">
               <button type="submit" class="btn-primary">Save</button>
               <button type="button" class="btn-secondary" id="btn-cancel-item">Cancel</button>
@@ -177,28 +156,376 @@
           </form>
         </div>
       </div>
-
       <div class="tracker-footer">
-        <button class="btn-link" id="btn-export">Export backup (JSON)</button>
-        <label class="btn-link" for="btn-import">Import backup
-          <input type="file" id="btn-import" accept=".json" style="display:none">
-        </label>
+        <button class="btn-link btn-lock" id="btn-export-free">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          Export — Premium only
+        </button>
         <button class="btn-link btn-danger" id="btn-clear-all">Clear all data</button>
       </div>
     </main>
   </div>
+</div>
 
-  <script src="app.js"></script>
-  <script>
-    if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('/sw.js').catch(() => {});
-      navigator.serviceWorker.addEventListener('message', (e) => {
-        if (e.data?.type === 'SW_UPDATED') {
-          document.getElementById('update-banner').hidden = false;
-        }
-      });
-    }
-    document.getElementById('btn-reload').addEventListener('click', () => location.reload());
-  </script>
+<!-- ════════ LOGIN VIEW ════════ -->
+<div id="view-login" hidden>
+  <div class="login-page">
+    <div class="login-card">
+      <div class="login-logo">
+        <svg width="46" height="46" viewBox="0 0 512 512"><rect width="512" height="512" rx="112" fill="#6366f1"/><text x="256" y="340" font-family="-apple-system,sans-serif" font-weight="800" font-size="260" fill="white" text-anchor="middle">R?</text></svg>
+      </div>
+      <h1 class="login-title">Welcome back</h1>
+      <p class="login-sub">Sign in to access your premium dashboard.</p>
+      <form id="login-form" novalidate>
+        <div class="field">
+          <label for="login-email">Email address</label>
+          <input type="email" id="login-email" placeholder="you@example.com" autocomplete="email">
+        </div>
+        <div class="field">
+          <label for="login-password">Password</label>
+          <input type="password" id="login-password" placeholder="••••••••" autocomplete="current-password">
+        </div>
+        <div class="login-error" id="login-error" hidden></div>
+        <button type="submit" class="btn-login">Sign in to Premium</button>
+      </form>
+      <div class="login-divider"><span>or</span></div>
+      <button class="btn-back-free" id="btn-back-free">← Continue with free version</button>
+    </div>
+    <p class="login-footer-note">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+      All data is stored locally on your device. Nothing is sent to any server.
+    </p>
+  </div>
+</div>
+
+<!-- ════════ PREMIUM VIEW ════════ -->
+<div id="view-premium" hidden>
+  <div class="prm-layout">
+
+    <!-- Sidebar -->
+    <aside class="prm-sidebar">
+      <div class="prm-logo">
+        <svg width="30" height="30" viewBox="0 0 512 512"><rect width="512" height="512" rx="112" fill="#6366f1"/><text x="256" y="340" font-family="-apple-system,sans-serif" font-weight="800" font-size="260" fill="white" text-anchor="middle">R?</text></svg>
+        <span>Repair Pro</span>
+      </div>
+
+      <nav class="prm-nav">
+        <button class="prm-nav-btn active" data-panel="prm-dashboard">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+          Dashboard
+        </button>
+        <button class="prm-nav-btn" data-panel="prm-items">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/></svg>
+          My Items
+        </button>
+        <button class="prm-nav-btn" data-panel="prm-calculator">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="2" width="16" height="20" rx="2"/><line x1="8" y1="6" x2="16" y2="6"/><line x1="8" y1="10" x2="16" y2="10"/><line x1="8" y1="14" x2="12" y2="14"/></svg>
+          Calculator
+        </button>
+        <button class="prm-nav-btn" data-panel="prm-analytics">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+          Analytics
+        </button>
+        <button class="prm-nav-btn" data-panel="prm-settings">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+          Settings
+        </button>
+      </nav>
+
+      <div class="prm-user-block">
+        <div class="prm-avatar">A</div>
+        <div class="prm-user-info">
+          <span class="prm-user-name">Admin</span>
+          <span class="prm-user-role">
+            <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+            Premium · Owner
+          </span>
+        </div>
+        <button class="prm-signout-icon" id="btn-signout" title="Sign out">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+        </button>
+      </div>
+    </aside>
+
+    <!-- Main -->
+    <main class="prm-main">
+
+      <!-- DASHBOARD -->
+      <section class="prm-panel" id="prm-dashboard">
+        <div class="prm-topbar">
+          <div>
+            <h2 class="prm-page-title">Dashboard</h2>
+            <p class="prm-page-sub" id="prm-greeting"></p>
+          </div>
+          <button class="prm-btn-primary" id="prm-btn-add">+ Add item</button>
+        </div>
+        <div class="prm-kpi-row">
+          <div class="prm-kpi">
+            <div class="prm-kpi-icon kpi-blue">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+            </div>
+            <span class="prm-kpi-val" id="ds-total">0</span>
+            <span class="prm-kpi-lbl">Total items</span>
+          </div>
+          <div class="prm-kpi">
+            <div class="prm-kpi-icon kpi-green">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+            </div>
+            <span class="prm-kpi-val" id="ds-active">0</span>
+            <span class="prm-kpi-lbl">Active warranties</span>
+          </div>
+          <div class="prm-kpi">
+            <div class="prm-kpi-icon kpi-amber">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+            </div>
+            <span class="prm-kpi-val" id="ds-expiring">0</span>
+            <span class="prm-kpi-lbl">Expiring soon</span>
+          </div>
+          <div class="prm-kpi">
+            <div class="prm-kpi-icon kpi-violet">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+            </div>
+            <span class="prm-kpi-val" id="ds-value">£0</span>
+            <span class="prm-kpi-lbl">Total invested</span>
+          </div>
+        </div>
+
+        <div class="prm-section-head">
+          <h3>Warranty alerts</h3>
+        </div>
+        <div id="prm-alerts" class="prm-alerts-list">
+          <p class="prm-muted">No upcoming expirations — you're all clear.</p>
+        </div>
+
+        <div class="prm-section-head">
+          <h3>Recent items</h3>
+          <button class="prm-link-btn" data-panel="prm-items">View all →</button>
+        </div>
+        <div id="prm-recent" class="prm-recent-grid"></div>
+      </section>
+
+      <!-- MY ITEMS -->
+      <section class="prm-panel" id="prm-items" hidden>
+        <div class="prm-topbar prm-topbar--wrap">
+          <div>
+            <h2 class="prm-page-title">My Items</h2>
+            <p class="prm-page-sub" id="prm-items-count">0 items</p>
+          </div>
+          <div class="prm-topbar-controls">
+            <div class="prm-search-box">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+              <input type="text" id="prm-search" placeholder="Search…" class="prm-search-input">
+            </div>
+            <select id="prm-filter" class="prm-select-sm">
+              <option value="">All statuses</option>
+              <option value="active">Active</option>
+              <option value="expiring">Expiring soon</option>
+              <option value="expired">Expired</option>
+            </select>
+            <button class="prm-btn-primary" id="prm-btn-add-2">+ Add item</button>
+          </div>
+        </div>
+        <div id="prm-items-empty" class="prm-empty-state" hidden>
+          <svg width="52" height="52" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" opacity=".2"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/></svg>
+          <p>No items yet. Click <strong>+ Add item</strong> to get started.</p>
+        </div>
+        <div class="prm-table-wrap">
+          <table class="prm-table" id="prm-table">
+            <thead>
+              <tr><th>Item</th><th>Category</th><th>Purchased</th><th>Warranty</th><th>Status</th><th>Value</th><th></th></tr>
+            </thead>
+            <tbody id="prm-tbody"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- CALCULATOR -->
+      <section class="prm-panel" id="prm-calculator" hidden>
+        <div class="prm-topbar">
+          <div>
+            <h2 class="prm-page-title">Calculator</h2>
+            <p class="prm-page-sub">Get a clear repair-vs-replace verdict</p>
+          </div>
+        </div>
+        <div class="prm-calc-wrap">
+          <form class="prm-calc-form" id="prm-calc-form" novalidate>
+            <div class="prm-calc-grid">
+              <div class="field">
+                <label for="prm-category">Item type</label>
+                <select id="prm-category">
+                  <option value="washing-machine">Washing machine</option>
+                  <option value="tumble-dryer">Tumble dryer</option>
+                  <option value="fridge">Fridge / fridge-freezer</option>
+                  <option value="freezer">Freezer</option>
+                  <option value="dishwasher">Dishwasher</option>
+                  <option value="electric-oven">Electric oven / cooker</option>
+                  <option value="gas-hob">Gas hob</option>
+                  <option value="microwave">Microwave</option>
+                  <option value="boiler">Boiler</option>
+                  <option value="vacuum">Vacuum cleaner</option>
+                  <option value="tv">Television</option>
+                  <option value="laptop">Laptop</option>
+                  <option value="desktop">Desktop PC</option>
+                  <option value="smartphone">Smartphone</option>
+                  <option value="tablet">Tablet</option>
+                  <option value="coffee-machine">Coffee machine</option>
+                  <option value="lawnmower">Lawnmower</option>
+                  <option value="other">Other (custom)</option>
+                </select>
+              </div>
+              <div class="field">
+                <label for="prm-lifespan">Typical lifespan (years)</label>
+                <input type="number" id="prm-lifespan" min="1" max="50" step="1">
+              </div>
+              <div class="field">
+                <label for="prm-age">Item age (years)</label>
+                <input type="number" id="prm-age" min="0" max="100" step="0.5" placeholder="e.g. 7">
+              </div>
+              <div class="field">
+                <label for="prm-repair-cost">Repair quote (£)</label>
+                <input type="number" id="prm-repair-cost" min="0" step="1" placeholder="e.g. 150">
+              </div>
+              <div class="field">
+                <label for="prm-replace-cost">Replacement cost (£)</label>
+                <input type="number" id="prm-replace-cost" min="0" step="1" placeholder="e.g. 400">
+              </div>
+              <div class="field prm-calc-submit-cell">
+                <button type="submit" class="prm-calc-btn">Calculate →</button>
+              </div>
+            </div>
+          </form>
+          <div class="prm-result-card" id="prm-result" hidden>
+            <div class="prm-result-left" id="prm-result-left">
+              <div class="prm-verdict-label">Verdict</div>
+              <div class="prm-verdict-big" id="prm-verdict-big"></div>
+              <p class="prm-verdict-reason" id="prm-verdict-reason"></p>
+            </div>
+            <div class="prm-result-right">
+              <div class="prm-rs"><span class="prm-rs-lbl">Repair ratio</span><span class="prm-rs-val" id="prm-sr"></span></div>
+              <div class="prm-rs"><span class="prm-rs-lbl">Repair £/year left</span><span class="prm-rs-val" id="prm-srpy"></span></div>
+              <div class="prm-rs"><span class="prm-rs-lbl">Replace £/year</span><span class="prm-rs-val" id="prm-srpy2"></span></div>
+              <div class="prm-rs"><span class="prm-rs-lbl">Life remaining</span><span class="prm-rs-val" id="prm-srem"></span></div>
+            </div>
+          </div>
+          <div class="prm-calc-saved" id="prm-calc-saved" hidden>
+            ✓ Saved to My Items as <strong id="prm-saved-name"></strong>
+          </div>
+        </div>
+      </section>
+
+      <!-- ANALYTICS -->
+      <section class="prm-panel" id="prm-analytics" hidden>
+        <div class="prm-topbar">
+          <div>
+            <h2 class="prm-page-title">Analytics</h2>
+            <p class="prm-page-sub">Insights across your tracked items</p>
+          </div>
+        </div>
+        <div class="prm-analytics-grid">
+          <div class="prm-a-card">
+            <h4>Warranty status</h4>
+            <div class="prm-donut-wrap">
+              <svg id="prm-donut" viewBox="0 0 120 120" width="120" height="120"></svg>
+              <div id="prm-donut-legend" class="prm-donut-legend"></div>
+            </div>
+          </div>
+          <div class="prm-a-card">
+            <h4>Items by category</h4>
+            <div id="prm-bar-cat" class="prm-bars"></div>
+          </div>
+          <div class="prm-a-card prm-a-card--wide">
+            <h4>Value invested by category (£)</h4>
+            <div id="prm-bar-val" class="prm-bars"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SETTINGS -->
+      <section class="prm-panel" id="prm-settings" hidden>
+        <div class="prm-topbar">
+          <div>
+            <h2 class="prm-page-title">Settings</h2>
+            <p class="prm-page-sub">Manage data, account &amp; preferences</p>
+          </div>
+        </div>
+        <div class="prm-settings-grid">
+          <div class="prm-s-card">
+            <div class="prm-s-head">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="21 15 21 21 3 21 3 15"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+              Data management
+            </div>
+            <p>Export a full JSON backup of all your items, or restore from a previous backup.</p>
+            <div class="prm-s-btns">
+              <button class="prm-btn-secondary" id="prm-export">Export backup</button>
+              <label class="prm-btn-secondary" for="prm-import-file">Import backup<input type="file" id="prm-import-file" accept=".json" style="display:none"></label>
+            </div>
+          </div>
+          <div class="prm-s-card">
+            <div class="prm-s-head">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+              Account
+            </div>
+            <p>Signed in as admin with full premium access. All data is stored locally — nothing is sent to any server.</p>
+            <div class="prm-s-btns">
+              <button class="prm-btn-secondary" id="prm-signout-settings">Sign out</button>
+            </div>
+          </div>
+          <div class="prm-s-card prm-s-card--danger">
+            <div class="prm-s-head">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/></svg>
+              Danger zone
+            </div>
+            <p>Permanently delete all items and data. This cannot be undone.</p>
+            <div class="prm-s-btns">
+              <button class="prm-btn-danger" id="prm-clear-all">Clear all data</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- PREMIUM ITEM MODAL -->
+  <div class="prm-modal-overlay" id="prm-item-modal" hidden>
+    <div class="prm-modal">
+      <div class="prm-modal-head">
+        <h3 id="prm-modal-title">Add item</h3>
+        <button class="prm-modal-close" id="prm-close-modal">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+      <form id="prm-item-form" novalidate>
+        <input type="hidden" id="prm-item-id">
+        <div class="prm-modal-grid">
+          <div class="field"><label for="prm-item-name">Item name <span class="required">*</span></label><input type="text" id="prm-item-name" placeholder="e.g. Kitchen washing machine" required></div>
+          <div class="field"><label for="prm-item-cat">Category</label><select id="prm-item-cat"></select></div>
+          <div class="field"><label for="prm-item-date">Purchase date</label><input type="date" id="prm-item-date"></div>
+          <div class="field"><label for="prm-item-price">Purchase price (£)</label><input type="number" id="prm-item-price" min="0" step="1" placeholder="e.g. 450"></div>
+          <div class="field"><label for="prm-item-warranty">Warranty (months)</label><input type="number" id="prm-item-warranty" min="0" step="1" placeholder="e.g. 24"></div>
+          <div class="field prm-modal-full"><label for="prm-item-notes">Notes</label><textarea id="prm-item-notes" rows="2" placeholder="Serial number, model, retailer…"></textarea></div>
+        </div>
+        <div class="prm-modal-actions">
+          <button type="submit" class="prm-btn-primary">Save item</button>
+          <button type="button" class="prm-btn-ghost" id="prm-cancel-modal">Cancel</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script src="app.js"></script>
+<script>
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('/sw.js').catch(() => {});
+    navigator.serviceWorker.addEventListener('message', (e) => {
+      if (e.data?.type === 'SW_UPDATED') {
+        const b = document.getElementById('update-banner');
+        if (b) b.hidden = false;
+      }
+    });
+  }
+  document.getElementById('btn-reload')?.addEventListener('click', () => location.reload());
+</script>
 </body>
 </html>
