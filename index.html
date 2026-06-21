@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Repair or Replace?</title>
+  <meta name="theme-color" content="#2563eb">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="Repair?">
+  <link rel="manifest" href="manifest.json">
+  <link rel="apple-touch-icon" href="icon.svg">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- Update banner (hidden until SW signals a new version) -->
+  <div class="update-banner" id="update-banner" hidden>
+    Update available — <button class="btn-link" id="btn-reload">tap to reload</button>
+  </div>
+
+  <div class="app">
+    <header class="app-header">
+      <h1>Repair or Replace?</h1>
+      <p class="tagline">Enter your numbers. Get a clear answer.</p>
+    </header>
+
+    <nav class="tabs" role="tablist">
+      <button class="tab tab--active" role="tab" aria-selected="true" data-tab="calculator">Calculator</button>
+      <button class="tab" role="tab" aria-selected="false" data-tab="tracker">My Items</button>
+    </nav>
+
+    <!-- CALCULATOR TAB -->
+    <main class="tab-panel" id="panel-calculator">
+      <form class="calc-form" id="calc-form" novalidate>
+
+        <div class="field">
+          <label for="category">Item type</label>
+          <select id="category" name="category">
+            <option value="washing-machine">Washing machine</option>
+            <option value="tumble-dryer">Tumble dryer</option>
+            <option value="fridge">Fridge / fridge-freezer</option>
+            <option value="freezer">Freezer</option>
+            <option value="dishwasher">Dishwasher</option>
+            <option value="electric-oven">Electric oven / cooker</option>
+            <option value="gas-hob">Gas hob</option>
+            <option value="microwave">Microwave</option>
+            <option value="boiler">Boiler</option>
+            <option value="vacuum">Vacuum cleaner</option>
+            <option value="tv">Television</option>
+            <option value="laptop">Laptop</option>
+            <option value="desktop">Desktop PC</option>
+            <option value="smartphone">Smartphone</option>
+            <option value="tablet">Tablet</option>
+            <option value="coffee-machine">Coffee machine</option>
+            <option value="lawnmower">Lawnmower</option>
+            <option value="other">Other (custom)</option>
+          </select>
+        </div>
+
+        <div class="field field--lifespan">
+          <label for="lifespan">
+            Typical lifespan (years)
+            <span class="label-hint">— edit if you know better</span>
+          </label>
+          <input type="number" id="lifespan" name="lifespan" min="1" max="50" step="1">
+        </div>
+
+        <div class="field">
+          <label for="age">Item age (years)</label>
+          <input type="number" id="age" name="age" min="0" max="100" step="0.5" placeholder="e.g. 7">
+        </div>
+
+        <div class="field">
+          <label for="repair-cost">Repair quote (£)</label>
+          <input type="number" id="repair-cost" name="repair-cost" min="0" step="1" placeholder="e.g. 150">
+        </div>
+
+        <div class="field">
+          <label for="replace-cost">Replacement cost (£)</label>
+          <input type="number" id="replace-cost" name="replace-cost" min="0" step="1" placeholder="e.g. 400">
+        </div>
+
+        <button type="submit" class="btn-calculate">Calculate</button>
+      </form>
+
+      <!-- RESULT -->
+      <section class="result" id="result" aria-live="polite" hidden>
+        <div class="verdict-block">
+          <span class="verdict-label">Verdict</span>
+          <div class="verdict" id="verdict"></div>
+          <p class="verdict-reason" id="verdict-reason"></p>
+        </div>
+
+        <div class="stats">
+          <div class="stat">
+            <span class="stat-label">Repair ratio</span>
+            <span class="stat-value" id="stat-ratio"></span>
+          </div>
+          <div class="stat">
+            <span class="stat-label">Repair cost / year left</span>
+            <span class="stat-value" id="stat-repair-per-year"></span>
+          </div>
+          <div class="stat">
+            <span class="stat-label">Replace cost / year</span>
+            <span class="stat-value" id="stat-replace-per-year"></span>
+          </div>
+          <div class="stat">
+            <span class="stat-label">Estimated life remaining</span>
+            <span class="stat-value" id="stat-remaining"></span>
+          </div>
+        </div>
+
+        <div class="result-actions" id="result-actions">
+          <span class="saved-notice" id="saved-notice" hidden>
+            ✓ Saved to tracker as <strong id="saved-name"></strong> — <button class="btn-link" id="btn-rename-item">rename</button>
+          </span>
+        </div>
+      </section>
+
+      <div class="inline-message" id="calc-message" hidden></div>
+    </main>
+
+    <!-- TRACKER TAB -->
+    <main class="tab-panel" id="panel-tracker" hidden>
+      <div class="tracker-actions">
+        <button class="btn-primary" id="btn-add-item">+ Add item</button>
+      </div>
+
+      <div class="empty-state" id="tracker-empty">
+        <p>No items yet.</p>
+        <p>Add an item to track warranties and send it to the calculator when something breaks.</p>
+      </div>
+
+      <ul class="item-list" id="item-list" aria-label="Saved items"></ul>
+
+      <!-- ADD / EDIT ITEM FORM -->
+      <div class="modal-overlay" id="item-modal" hidden role="dialog" aria-modal="true" aria-labelledby="modal-title">
+        <div class="modal">
+          <h2 id="modal-title">Add item</h2>
+          <form id="item-form" novalidate>
+            <input type="hidden" id="item-id">
+
+            <div class="field">
+              <label for="item-name">Item name <span class="required">*</span></label>
+              <input type="text" id="item-name" placeholder="e.g. Kitchen washing machine" required>
+            </div>
+
+            <div class="field">
+              <label for="item-category">Category</label>
+              <select id="item-category"></select>
+            </div>
+
+            <div class="field">
+              <label for="item-purchase-date">Purchase date</label>
+              <input type="date" id="item-purchase-date">
+            </div>
+
+            <div class="field">
+              <label for="item-price">Purchase price (£)</label>
+              <input type="number" id="item-price" min="0" step="1" placeholder="e.g. 450">
+            </div>
+
+            <div class="field">
+              <label for="item-warranty">Warranty length (months)</label>
+              <input type="number" id="item-warranty" min="0" step="1" placeholder="e.g. 24">
+            </div>
+
+            <div class="field">
+              <label for="item-notes">Notes</label>
+              <textarea id="item-notes" rows="2" placeholder="Optional — serial number, model, etc."></textarea>
+            </div>
+
+            <div class="modal-actions">
+              <button type="submit" class="btn-primary">Save</button>
+              <button type="button" class="btn-secondary" id="btn-cancel-item">Cancel</button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <div class="tracker-footer">
+        <button class="btn-link" id="btn-export">Export backup (JSON)</button>
+        <label class="btn-link" for="btn-import">Import backup
+          <input type="file" id="btn-import" accept=".json" style="display:none">
+        </label>
+        <button class="btn-link btn-danger" id="btn-clear-all">Clear all data</button>
+      </div>
+    </main>
+  </div>
+
+  <script src="app.js"></script>
+  <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('/sw.js').catch(() => {});
+      navigator.serviceWorker.addEventListener('message', (e) => {
+        if (e.data?.type === 'SW_UPDATED') {
+          document.getElementById('update-banner').hidden = false;
+        }
+      });
+    }
+    document.getElementById('btn-reload').addEventListener('click', () => location.reload());
+  </script>
+</body>
+</html>
